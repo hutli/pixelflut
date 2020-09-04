@@ -35,26 +35,26 @@ impl Packet {
         }
     }
 
-    fn write_and_update_index(&mut self, slice: &[u8]) {
+    fn write_and_update_index(&mut self, slice: &[u8], i: &mut usize) {
         let len = slice.len();
-        self.data[self.data_i..self.data_i + len].copy_from_slice(slice);
-        self.data_i += len;
+        self.data[*i..*i + len].copy_from_slice(slice);
+        *i += len;
     }
 
     //#[inline(never)]
     fn add_pixel(&mut self, pixel: Pixel) {
-        self.write_and_update_index(b"PX ");
-        let tmp = pixel.x.numtoa(10, &mut self.data[self.data_i..]);
-        //let tmp = self.lookup(pixel.x);
-        self.data_i += tmp.len();
+        let mut i = self.data_i;
+        self.write_and_update_index(b"PX ", &mut i);
+        let tmp = pixel.x.numtoa(10, &mut self.data[i..]);
+        i += tmp.len();
 
-        self.write_and_update_index(b" ");
-        let tmp = pixel.y.numtoa(10, &mut self.data[self.data_i..]);
-        //let tmp = self.lookup(pixel.y);
-        self.data_i += tmp.len();
-        self.write_and_update_index(b" ");
-        self.write_and_update_index(pixel.color);
-        self.write_and_update_index(b"\n");
+        self.write_and_update_index(b" ", &mut i);
+        let tmp = pixel.y.numtoa(10, &mut self.data[i..]);
+        i += tmp.len();
+        self.write_and_update_index(b" ", &mut i);
+        self.write_and_update_index(pixel.color, &mut i);
+        self.write_and_update_index(b"\n", &mut i);
+        self.data_i = i;
     }
 
     pub fn add_letter(&mut self, c: char) {

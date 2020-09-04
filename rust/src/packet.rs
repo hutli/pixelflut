@@ -68,7 +68,7 @@ impl Packet {
             //print!("{}\n", termion::style::Reset);
             for x in 0..width {
                 let i = x + y * width;
-                let array_contains_i = array.contains(&i);
+                let array_contains_i = array.binary_search(&i).is_ok();
                 for zy in 0..scale_y {
                     for zx in 0..scale_x {
                         let color: &mut [u8] = &mut ['0' as u8; 6];

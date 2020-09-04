@@ -3,10 +3,10 @@ from PIL import Image
 im = Image.open('font1.png') # Can be many different formats.
 pix = im.load()
 print(im.size)
-printstr = "let alphabet:Vec<Vec<i32>> = vec!["
+printstr = "    match c {"
 for yoffset in range(4):
     for xoffset in range(32):
-        printstr += f"vec!["
+        printstr += f"\n'!' => Some(&["
         test = 0
         for j in range(0,8*8):
             x = j%8 + xoffset*8
@@ -17,7 +17,7 @@ for yoffset in range(4):
                 printstr += f'{j},'
         if test:
             printstr = printstr[:-1]
-        printstr += '],'
-printstr = printstr[:-1] + '];'
+        printstr += ']),\n'
+printstr = printstr[:-1] + '        _ => None,\n}'
 print(printstr)
     

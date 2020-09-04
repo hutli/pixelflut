@@ -75,9 +75,10 @@ impl Packet {
                         let x = zx + self.xoffset + x * scale_x;
                         let y = zy + self.yoffset + y * scale_y;
                         if !array_contains_i {
-                            rand::random::<u8>().numtoa(16, &mut color[0..2]);
-                            rand::random::<u8>().numtoa(16, &mut color[2..4]);
-                            rand::random::<u8>().numtoa(16, &mut color[4..6]);
+                            let rand_num = rand::random::<u32>();
+                            (rand_num & 0xff).numtoa(16, &mut color[0..2]);
+                            ((rand_num >> 8) & 0xff).numtoa(16, &mut color[2..4]);
+                            ((rand_num >> 8 * 2) & 0xff).numtoa(16, &mut color[4..6]);
                         }
                         let pixel = Pixel { x, y, color };
                         self.add_pixel(pixel)

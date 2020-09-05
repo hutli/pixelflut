@@ -1,4 +1,4 @@
-use crate::alphabet::char_to_pixel_positions;
+use crate::alphabet_old::char_to_pixel_positions;
 use io::Write;
 use numtoa::NumToA;
 use std::{io, net::TcpStream};
@@ -20,6 +20,7 @@ pub struct Packet {
     xoffset: u32,
     yoffset: u32,
     scale: u32,
+    //alphabet: Alphabet,
     //buf: [u8; SCREEN_DIM_MAX_LEN],
 }
 
@@ -31,6 +32,7 @@ impl Packet {
             xoffset: 0,
             yoffset: 0,
             scale,
+            //alphabet: Alphabet::new(),
             //buf: [0 as u8; SCREEN_DIM_MAX_LEN],
         }
     }
@@ -41,16 +43,41 @@ impl Packet {
         *i += len;
     }
 
+    fn write_num_and_update_index(&mut self, num: usize, i: &mut usize) {
+        // 1234 / 1000 = 1
+        // 1234 % 1000 = 234 / 100 = 2
+        let th = (num / 1000) as u8;
+        let h = ((num % 1000) / 100) as u8;
+        let te = ((num % 100) / 10) as u8;
+        let o = (num % 10) as u8;
+        if th != 0 {
+            self.data[*i] = th + 48;
+            self.data[*i + 1] = h + 48;
+            self.data[*i + 2] = te + 48;
+            *i += 3;
+        } else if h != 0 {
+            self.data[*i] = h + 48;
+            self.data[*i + 1] = te + 48;
+            *i += 2;
+        } else if te != 0 {
+            self.data[*i] = te + 48;
+            *i += 1;
+        }
+        self.data[*i] = o + 48;
+        *i += 1;
+    }
+
     //#[inline(never)]
     fn add_pixel(&mut self, pixel: Pixel) {
         let mut i = self.data_i;
         self.write_and_update_index(b"PX ", &mut i);
-        let tmp = pixel.x.numtoa(10, &mut self.data[i..]);
-        i += tmp.len();
-
+        // let tmp = pixel.x.numtoa(10, &mut self.data[i..]);
+        // i += tmp.len();
+        self.write_num_and_update_index(pixel.x as usize, &mut i);
         self.write_and_update_index(b" ", &mut i);
-        let tmp = pixel.y.numtoa(10, &mut self.data[i..]);
-        i += tmp.len();
+        // let tmp = pixel.y.numtoa(10, &mut self.data[i..]);
+        // i += tmp.len();
+        self.write_num_and_update_index(pixel.y as usize, &mut i);
         self.write_and_update_index(b" ", &mut i);
         self.write_and_update_index(pixel.color, &mut i);
         self.write_and_update_index(b"\n", &mut i);
@@ -62,7 +89,6 @@ impl Packet {
         let scale_x: u32 = self.scale;
         let width: u32 = 8;
         let height: u32 = 8;
-        // let array = &self.alphabet[0];
         let array = char_to_pixel_positions(c).expect(&format!("Invalid char: {}", c));
         for y in 0..height {
             //print!("{}\n", termion::style::Reset);
@@ -102,6 +128,10 @@ impl Packet {
     }
 
     pub fn write(&mut self, stream: &mut TcpStream) -> io::Result<usize> {
+        // println!(
+        //     "{:?}",
+        //     String::from_utf8(self.data[0..self.data_i].to_vec())
+        // );
         stream.write(&self.data[0..self.data_i])
     }
 

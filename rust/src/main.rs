@@ -14,7 +14,7 @@ fn send_data(to_send: String) {
     let mut stream = TcpStream::connect(SERVER_IP).expect("Failed to connect");
     println!("Successfully connected to server {}", SERVER_IP);
     let mut packet_to_build = Packet::new(8);
-    for _ in 0..1 {
+    loop {
         let now = Instant::now();
         packet_to_build.add_string(&to_send);
         let build_took = now.elapsed();

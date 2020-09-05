@@ -1,4 +1,4 @@
-#[inline(never)]
+//#[inline(never)]
 pub fn char_to_pixel_positions<'t>(c: char) -> Option<&'t [u32]> {
     match c {
         ' ' => Some(&[]),

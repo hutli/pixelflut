@@ -1,4 +1,4 @@
-use crate::alphabet_old::char_to_pixel_positions;
+use crate::alphabet_fast::Alphabet;
 use io::Write;
 use numtoa::NumToA;
 use std::{io, net::TcpStream};
@@ -20,7 +20,7 @@ pub struct Packet {
     xoffset: u32,
     yoffset: u32,
     scale: u32,
-    //alphabet: Alphabet,
+    alphabet: Alphabet,
     //buf: [u8; SCREEN_DIM_MAX_LEN],
 }
 
@@ -32,7 +32,7 @@ impl Packet {
             xoffset: 0,
             yoffset: 0,
             scale,
-            //alphabet: Alphabet::new(),
+            alphabet: Alphabet::new(),
             //buf: [0 as u8; SCREEN_DIM_MAX_LEN],
         }
     }
@@ -89,12 +89,13 @@ impl Packet {
         let scale_x: u32 = self.scale;
         let width: u32 = 8;
         let height: u32 = 8;
-        let array = char_to_pixel_positions(c).expect(&format!("Invalid char: {}", c));
+        //let array = char_to_pixel_positions(c).expect(&format!("Invalid char: {}", c));
         for y in 0..height {
             //print!("{}\n", termion::style::Reset);
             for x in 0..width {
                 let i = x + y * width;
-                let array_contains_i = array.binary_search(&i).is_ok();
+                //let array_contains_i = array.binary_search(&i).is_ok();
+                let array_contains_i = self.alphabet.is_pixel_in_char(c, i as u8);
                 for zy in 0..scale_y {
                     for zx in 0..scale_x {
                         let color: &mut [u8] = &mut ['0' as u8; 6];

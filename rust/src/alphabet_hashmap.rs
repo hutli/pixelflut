@@ -7,7 +7,7 @@ pub struct Alphabet {
 impl Alphabet {
     pub fn new() -> Alphabet {
         Alphabet {
-            arr: [
+            arr: [Some(0x00)
                 [].iter().cloned().collect(),
                 [
                     (3, true),

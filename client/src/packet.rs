@@ -11,7 +11,7 @@ struct Pixel<'t> {
     color: &'t [u8],
 }
 
-const SCREEN_DIM_MAX_LEN: usize = 4;
+// const SCREEN_DIM_MAX_LEN: usize = 4;
 const COMMAND_SIZE: usize = 19; // "PX XXXX YYY CCCCCC\n"
 
 pub struct Packet {
@@ -140,5 +140,21 @@ impl Packet {
         self.xoffset = 0;
         self.yoffset = 0;
         self.data_i = 0;
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_non_random() {
+        let mut packet_to_build = Packet::new(8);
+        packet_to_build.add_string("▓▓▓▓▓▓▓▓▓▓▓");
+
+        let mut sum = 0u64;
+        for x in packet_to_build.data.iter() {
+            sum += *x as u64;
+        }
+        assert_eq!(sum, 36315648)
     }
 }

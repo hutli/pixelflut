@@ -2,10 +2,10 @@
 // pub mod alphabet_bitarr;
 // pub mod alphabet_bitarr_2;
 pub mod alphabet_fast;
-pub mod alphabet_fast_2;
-pub mod alphabet_in_mem;
-pub mod alphabet_match;
-pub mod alphabet_old;
+// pub mod alphabet_fast_2;
+// pub mod alphabet_in_mem;
+// pub mod alphabet_match;
+// pub mod alphabet_old;
 pub mod alphabet_u64;
 // pub mod alphabet_vec;
 pub mod packet;

@@ -1,8 +1,6 @@
-use numtoa::NumToA;
 use pixelflut::packet::*;
-use std::io::{self, Write};
 use std::net::TcpStream;
-use std::{thread, time::Instant, vec::Vec};
+use std::time::Instant;
 
 const SERVER_IP: &str = "127.0.0.1:1337";
 //const SERVER_IP: &str = "192.168.0.96:1337";
@@ -19,7 +17,7 @@ fn send_data(to_send: String) {
         packet_to_build.add_string(&to_send);
         let build_took = now.elapsed();
         // Send and reset
-        packet_to_build.write(&mut stream);
+        let _ = packet_to_build.write(&mut stream);
         packet_to_build.reset();
         println!(
             "Build took {}μs out of {}μs",

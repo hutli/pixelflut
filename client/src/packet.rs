@@ -1,4 +1,6 @@
-use crate::alphabet_fast::Alphabet;
+use crate::alphabet::Alphabet;
+use crate::alphabet_bitarr::BitArrAlphabet;
+use crate::alphabet_fast::BinarySearchAlphabet;
 use io::Write;
 use numtoa::NumToA;
 use std::{io, net::TcpStream};
@@ -14,18 +16,24 @@ struct Pixel<'t> {
 // const SCREEN_DIM_MAX_LEN: usize = 4;
 const COMMAND_SIZE: usize = 19; // "PX XXXX YYY CCCCCC\n"
 
-pub struct Packet {
+pub struct Packet<A>
+where
+    A: Alphabet,
+{
     data: Vec<u8>,
     data_i: usize,
     xoffset: u32,
     yoffset: u32,
     scale: u32,
-    alphabet: Alphabet,
+    alphabet: A,
     //buf: [u8; SCREEN_DIM_MAX_LEN],
 }
 
-impl Packet {
-    pub fn new(scale: u32) -> Packet {
+impl<A> Packet<A>
+where
+    A: Alphabet,
+{
+    pub fn new(scale: u32) -> Packet<A> {
         Packet {
             data: vec![0; COMMAND_SIZE * SCREEN_HEIGHT as usize * SCREEN_WIDTH as usize],
             data_i: 0,
@@ -148,7 +156,7 @@ mod tests {
 
     #[test]
     fn test_non_random() {
-        let mut packet_to_build = Packet::new(8);
+        let mut packet_to_build = Packet::<BitArrAlphabet>::new(8);
         packet_to_build.add_string("▓▓▓▓▓▓▓▓▓▓▓");
 
         let mut sum = 0u64;

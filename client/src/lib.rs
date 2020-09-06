@@ -1,6 +1,6 @@
 // pub mod alphabet_hashmap;
+pub mod alphabet;
 pub mod alphabet_bitarr;
-// pub mod alphabet_bitarr_2;
 pub mod alphabet_fast;
 // pub mod alphabet_fast_2;
 // pub mod alphabet_in_mem;

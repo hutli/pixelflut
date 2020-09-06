@@ -1,3 +1,4 @@
+use pixelflut::alphabet_bitarr::BitArrAlphabet;
 use pixelflut::packet::*;
 use std::net::TcpStream;
 use std::time::Instant;
@@ -11,7 +12,7 @@ const SERVER_IP: &str = "127.0.0.1:1337";
 fn send_data(to_send: String) {
     let mut stream = TcpStream::connect(SERVER_IP).expect("Failed to connect");
     println!("Successfully connected to server {}", SERVER_IP);
-    let mut packet_to_build = Packet::new(8);
+    let mut packet_to_build = Packet::<BitArrAlphabet>::new(8);
     loop {
         let now = Instant::now();
         packet_to_build.add_string(&to_send);

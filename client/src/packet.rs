@@ -139,10 +139,6 @@ where
     }
 
     pub fn extend_noise(&mut self, pixels: u32) {
-        println!(
-            "Extending {}px from {} in {}",
-            pixels, self.noise_start, self.data_i
-        );
         let mut i = self.noise_end;
         for j in 0..pixels {
             self.get_next_command(&mut i);

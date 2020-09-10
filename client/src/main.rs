@@ -70,7 +70,7 @@ fn create_and_consume(x: u32, y: u32, delay_ms: u128, chunks: u32) {
     let mut i = chunks;
     while i > 0 {
         if last_consume.elapsed().as_millis() >= delay_ms {
-            println!("Extending with {}px", size);
+            //println!("Extending with {}px", size);
             packet_to_build.extend_noise(size);
             last_consume = Instant::now();
             i -= 1;
@@ -85,7 +85,7 @@ fn main() {
 
     // send_data(input_arg);
     // send_noise(0, 0, 500, 500);
-    create_and_consume(50, 50, 1000, 20);
+    create_and_consume(2, 50, 50, 2000);
 
     println!("Terminated.");
 }

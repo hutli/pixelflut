@@ -1,16 +1,13 @@
 from PIL import Image
 
-def generic_printer(match_arm_prefix, match_arm_suffix, if_present, if_not_present, end, fileName):
-    printstr = '''
-        pub struct Alphabet {
-        }
+def generic_printer(match_arm_prefix, match_arm_suffix, if_present, if_not_present, end, imports, typeName, fileName):
+    printstr = imports + '\nuse crate::alphabet::Alphabet;\npub struct ' + typeName + ''' {
+}
 
-        impl Alphabet {
-            pub fn new() -> Alphabet {
-                Alphabet { }
-            }
-            pub fn is_pixel_in_char(&mut self, c: char, index: u8) -> bool {
-                let x = match c {
+impl Alphabet for ''' + typeName + ''' {
+    fn new() -> Self { Self{} }
+    fn is_pixel_in_char(&mut self, c: char, index: u8) -> bool {
+        let ans = match c {
     '''
     for yoffset in range(4):
         for xoffset in range(32):
@@ -45,19 +42,27 @@ def bit_map():
     match_arm_suffix = "u64,"
     if_present = lambda x: "1"
     if_not_present = lambda: "0"
-    end = '''((x << index)
+    end = '''((ans << index)
                     & 0x8000000000000000)
                     > 0x1
                 '''
-    generic_printer(match_arm_prefix, match_arm_suffix, if_present, if_not_present, end, "alphabet_bitarr.rs")
+    generic_printer(match_arm_prefix, match_arm_suffix, if_present, if_not_present, end,"", "BitMapAlphabet", "alphabet_bitarr.rs")
 
 def binary_search():
     match_arm_prefix = "["
     match_arm_suffix = "].binary_search(&index).is_ok(),"
     if_present = lambda x: str(x) + ","
     if_not_present = lambda: ""
-    end = '''x'''
-    generic_printer(match_arm_prefix, match_arm_suffix, if_present, if_not_present, end, "alphabet_fast.rs")
+    end = '''ans'''
+    generic_printer(match_arm_prefix, match_arm_suffix, if_present, if_not_present, end, "", "BinarySearchAlphabet", "alphabet_fast.rs")
+
+def bit_arr_2():
+    match_arm_prefix = "bitarr![Lsb0,u8;"
+    match_arm_suffix = "],"
+    if_present = lambda x: "1,"
+    if_not_present = lambda: "0,"
+    end = '''ans.get(index as usize) == Some(&true)'''
+    generic_printer(match_arm_prefix, match_arm_suffix, if_present, if_not_present, end, "use bitvec::{bitarr, bits, order::Lsb0, slice::BitSlice};\nuse bitvec::prelude::LocalBits;", "BitArrayAlphabet2", "alphabet_bit_array_2.rs")
 
 def bit_arr():
     printstr = '''
@@ -123,3 +128,4 @@ print(len(chars))
 bit_map()
 binary_search()
 bit_arr()
+bit_arr_2()

@@ -1,13 +1,12 @@
-use crate::alphabet::Alphabet;
-        pub struct BinarySearchAlphabet {
-        }
 
-        impl Alphabet for BinarySearchAlphabet {
-            fn new() -> BinarySearchAlphabet {
-                BinarySearchAlphabet { }
-            }
-            fn is_pixel_in_char(&mut self, c: char, index: u8) -> bool {
-                let x = match c {
+use crate::alphabet::Alphabet;
+pub struct BinarySearchAlphabet {
+}
+
+impl Alphabet for BinarySearchAlphabet {
+    fn new() -> Self { Self{} }
+    fn is_pixel_in_char(&mut self, c: char, index: u8) -> bool {
+        let ans = match c {
     
 ' ' => [].binary_search(&index).is_ok(),
 '!' => [3,4,11,12,19,20,27,28,35,36,51,52,].binary_search(&index).is_ok(),
@@ -138,4 +137,4 @@ use crate::alphabet::Alphabet;
 '😣' => [7,14,15,21,22,25,26,28,29,33,34,35,36,41,42,43,49,50,].binary_search(&index).is_ok(),
 '😏' => [2,3,4,5,6,9,10,12,14,15,17,18,20,22,23,25,26,27,28,29,30,31,33,35,36,37,39,41,42,46,47,50,51,52,53,54,].binary_search(&index).is_ok(),
 _ => return false};
-x}}
+ans}}

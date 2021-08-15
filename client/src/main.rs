@@ -3,7 +3,7 @@ use pixelflut::packet::*;
 use std::net::TcpStream;
 use std::time::Instant;
 
-const SERVER_IP: &str = "127.0.0.1:1337";
+const SERVER_IP: &str = "192.168.1.210:1337";
 //const SERVER_IP: &str = "127.0.0.1:3333";
 //const SERVER_IP: &str = "192.168.0.96:1337";
 //const SERVER_IP:&str = "192.168.0.161:1337";
@@ -83,9 +83,9 @@ fn create_and_consume(x: u32, y: u32, delay_ms: u128, chunks: u32) {
 fn main() {
     let input_arg = std::env::args().nth(1).expect("no input given");
 
-    // send_data(input_arg);
+    send_data(input_arg);
     // send_noise(0, 0, 500, 500);
-    create_and_consume(2, 50, 50, 2000);
+    //create_and_consume(2, 50, 50, 2000);
 
     println!("Terminated.");
 }
